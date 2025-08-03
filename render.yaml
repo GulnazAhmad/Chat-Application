@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: realtime-chat-backend
+    env: node
+    region: oregon # choose appropriate region
+    branch: main
+    workingDirectory: backend
+    buildCommand: "" # Render will run npm install automatically
+    startCommand: "npm start"
+    envVars:
+      - key: MONGODB_URI
+        fromSecret: MONGODB_URI
+      - key: JWT_SECRET
+        fromSecret: JWT_SECRET
+      - key: FRONTEND_URL
+        value: "https://realtime-chat-frontend.onrender.com" # placeholder; adjust after frontend deploy
+
+  - type: static
+    name: realtime-chat-frontend
+    branch: main
+    workingDirectory: frontend
+    buildCommand: "npm install && npm run build"
+    publishPath: "dist" # or "build" if CRA
+    envVars:
+      - key: VITE_API_URL
+        value: "https://realtime-chat-backend.onrender.com" # placeholder; replace with actual backend service URL
